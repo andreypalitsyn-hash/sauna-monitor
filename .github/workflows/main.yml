@@ -32,11 +32,12 @@ jobs:
         run: |
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip -q commandlinetools-linux-9477386_latest.zip
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
+          unzip -q commandlinetools-linux-10406996_latest.zip
           mv cmdline-tools latest
           mkdir -p cmdline-tools
           mv latest cmdline-tools/
+          export PATH=$PATH:$HOME/android-sdk/cmdline-tools/latest/bin
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
