@@ -30,22 +30,27 @@ jobs:
 
       - name: Install Android SDK
         run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
-          unzip -q commandlinetools-linux-10406996_latest.zip
+          mkdir -p $ANDROID_HOME/cmdline-tools
+          cd $ANDROID_HOME
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip -q commandlinetools-linux-9477386_latest.zip
           mv cmdline-tools latest
           mkdir -p cmdline-tools
           mv latest cmdline-tools/
-          export PATH=$PATH:$HOME/android-sdk/cmdline-tools/latest/bin
-          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
-          sdkmanager --licenses || true
-          sdkmanager "build-tools;33.0.0" "platforms;android-33" "ndk;23.1.7779620"
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          yes | sdkmanager --licenses || true
+          sdkmanager "build-tools;30.0.3" "platforms;android-30" "ndk;23.1.7779620"
+        env:
+          ANDROID_HOME: $HOME/android-sdk
 
       - name: Build APK
         run: buildozer android debug
+        env:
+          ANDROID_SDK_ROOT: $HOME/android-sdk
+          ANDROID_HOME: $HOME/android-sdk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
