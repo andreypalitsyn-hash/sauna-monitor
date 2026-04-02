@@ -28,8 +28,24 @@ jobs:
           pip install cython
           pip install buildozer
 
+      - name: Install Android SDK (build-tools, NDK)
+        run: |
+          mkdir -p $HOME/android-sdk
+          cd $HOME/android-sdk
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip -q commandlinetools-linux-9477386_latest.zip
+          mv cmdline-tools tools
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin
+          echo y | sdkmanager --licenses
+          sdkmanager "build-tools;33.0.0" "platforms;android-33" "ndk;23.1.7779620"
+        env:
+          ANDROID_SDK_ROOT: $HOME/android-sdk
+
       - name: Build APK
         run: buildozer android debug
+        env:
+          ANDROID_SDK_ROOT: $HOME/android-sdk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
